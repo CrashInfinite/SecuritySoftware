@@ -21,6 +21,12 @@ class Room(object):
     def add_sensor(self, sensor):
         self.sensors.append(sensor)
 
+    def room_data(self):
+        output = self.name + '\n'
+        for sensor in sensors:
+            output += sensor.sensor_data() + '\n'
+        return output
+
 class Sensor(object):
     def __init__(self, name, status, pos=None):
         self.name = name
@@ -36,7 +42,7 @@ class Sensor(object):
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
-        print '{} - {}'.format(self.name, self.status)
+        print sensor_data()
 
     def check_status(self):
         root.after(200, lambda : self.check_status())
@@ -44,6 +50,9 @@ class Sensor(object):
             w.itemconfig(self.img, fill='red') 
         else:
             w.itemconfig(self.img, fill='green')
+
+    def sensor_data(self):
+        return 'Sensor {} is currently {}'.format(self.name, self.status)
 
 building = []
 
