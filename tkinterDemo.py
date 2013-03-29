@@ -18,7 +18,7 @@ class Room(object):
             self.sensors = sensors
         w.create_rectangle(self.pos[0],self.pos[1], self.pos[2], self.pos[3])
 
-    def addSensor(self, sensor):
+    def add_sensor(self, sensor):
         self.sensors.append(sensor)
 
 class Sensor(object):
@@ -31,15 +31,15 @@ class Sensor(object):
             self.pos = pos
         self.img = w.create_rectangle(self.pos[0], self.pos[1], self.pos[2], self.pos[3], fill='red')
 
-    def flipStatus(self):
+    def flip_status(self):
         if self.status == 'OPEN':
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
         print '{} - {}'.format(self.name, self.status)
 
-    def checkStatus(self):
-        root.after(200, lambda : self.checkStatus())
+    def check_status(self):
+        root.after(200, lambda : self.check_status())
         if self.status == 'OPEN':
             w.itemconfig(self.img, fill='red') 
         else:
@@ -53,16 +53,16 @@ building.append(office)
 window = Sensor('win0', 'OPEN', [170,295,200,305])
 door = Sensor('door0', 'OPEN', [295,150,305,180])
 
-office.addSensor(window)
-office.addSensor(door)
+office.add_sensor(window)
+office.add_sensor(door)
 
 
-b = Button(root, text='Unlock Door', command=lambda : door.flipStatus())
+b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
 b.pack()
-c = Button(root, text='Unlock Window', command=lambda : window.flipStatus())
+c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
 c.pack()
 
 for item in office.sensors:
-    root.after(200, item.checkStatus())
+    root.after(200, item.check_status())
 
 mainloop()
