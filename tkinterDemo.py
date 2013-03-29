@@ -1,34 +1,22 @@
 from Tkinter import *
-import Tkinter
 
-master = Tk()
+root = Tk()
 
-w = Canvas(master, width=500, height=500)
+w = Canvas(root, width=500, height=500)
 w.pack()
 
-room_one = w.create_rectangle(50,50,300,300)
-window_one = w.create_rectangle(250,295,280,305, fill="green")
-window_one_state = ''
+room = w.create_rectangle(50,50,300,300)
+window = w.create_rectangle(150,295,200,305, fill='green')
+window_state = 0
 
-F2 = Tkinter.Frame()
-lab = Tkinter.Label(F2)
-def poll(state):
-	lab.after(200, poll(state))
-	if state == 'CLOSED':
-		lab.config(text='CLOSED')
+def switch(state):
+	print state
+	if state == 0:
+		state = 1
 	else:
-		lab.config(text='OPEN')
-		lab.pack()
-		F2.pack(side=Tkinter.TOP)
+		state = 0
 
-def flip(state):
-	if state == 'CLOSED':
-		state = 'OPEN'
-	else:
-		state = 'CLOSED'
+b = Button(root, text='switch', command=switch(window_state))
+b.pack()
 
-switch = Button(master, text="flip", command=flip(window_one_state))
-switch.pack()
-
-poll(window_one_state)
-Tkinter.mainloop()
+mainloop()
