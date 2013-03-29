@@ -27,14 +27,12 @@ class Sensor(object):
     def checkStatus(self):
         root.after(200, lambda : self.checkStatus())
         if self.status == 'OPEN':
-            w.itemconfig(self.img, fill='red')    
+            w.itemconfig(self.img, fill='red') 
         else:
             w.itemconfig(self.img, fill='green')
 
-
-
 window = Sensor('win0', 'OPEN', [170,295,200,305])
-door = Sensor('door0', 'OPEN', [295,150,305,180])
+door = Sensor('door0', 'CLOSED', [295,150,305,180])
 sensors = []
 sensors.append(window)
 sensors.append(door)
