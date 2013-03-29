@@ -13,13 +13,13 @@ window_one_state = ''
 F2 = Tkinter.Frame()
 lab = Tkinter.Label(F2)
 def poll(state):
-    lab.after(200, poll(state))
-    if state == 'CLOSED':
-    	lab.config(text='CLOSED')
-    else:
-    	lab.config(text='OPEN')
-lab.pack()
-F2.pack(side=Tkinter.TOP)
+	lab.after(200, poll(state))
+	if state == 'CLOSED':
+		lab.config(text='CLOSED')
+	else:
+		lab.config(text='OPEN')
+		lab.pack()
+		F2.pack(side=Tkinter.TOP)
 
 def flip(state):
 	if state == 'CLOSED':
