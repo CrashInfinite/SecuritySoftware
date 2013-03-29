@@ -22,8 +22,8 @@ class Room(object):
         self.sensors.append(sensor)
 
     def room_data(self):
-        output = self.name + '\n'
-        for sensor in sensors:
+        output = 'Room: {} \n'.format(self.name)
+        for sensor in self.sensors:
             output += sensor.sensor_data() + '\n'
         return output
 
@@ -42,7 +42,7 @@ class Sensor(object):
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
-        print sensor_data()
+        l.config(text=office.room_data())
 
     def check_status(self):
         root.after(200, lambda : self.check_status())
@@ -70,8 +70,11 @@ b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
 b.pack()
 c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
 c.pack()
+l = Label(root, justify=LEFT)
+l.pack()
 
-for item in office.sensors:
-    root.after(200, item.check_status())
+for room in building:
+    for item in room.sensors:
+        root.after(200, item.check_status())
 
 mainloop()
