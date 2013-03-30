@@ -1,10 +1,5 @@
 from Tkinter import *
 
-root = Tk()
-
-w = Canvas(root, width=500, height=500)
-w.pack()
-
 class Room(object):
     def __init__(self, name, pos=None, sensors=None):
         self.name = name
@@ -54,6 +49,20 @@ class Sensor(object):
     def sensor_data(self):
         return 'Sensor {} is currently {}'.format(self.name, self.status)
 
+root = Tk()
+
+w = Canvas(root, width=500, height=500)
+w.pack()
+
+
+b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
+b.pack()
+c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
+c.pack()
+l = Label(root, justify=LEFT)
+l.pack()
+
+
 building = []
 
 office = Room('Office', [50,50,300,300], [])
@@ -65,13 +74,6 @@ door = Sensor('door0', 'OPEN', [295,150,305,180])
 office.add_sensor(window)
 office.add_sensor(door)
 
-
-b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
-b.pack()
-c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
-c.pack()
-l = Label(root, justify=LEFT)
-l.pack()
 
 for room in building:
     for item in room.sensors:
