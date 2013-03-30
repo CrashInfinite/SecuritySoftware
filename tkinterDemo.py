@@ -3,14 +3,15 @@ from Tkinter import *
 class Room(object):
     def __init__(self, name, pos=None, sensors=None):
         self.name = name
-        if pos == None:
-            self.pos = []
-        else:
-            self.pos = pos
-        if sensors == None:
-            self.sensors = []
-        else:
-            self.sensors = sensors
+        
+        if pos is None:
+            pos = []
+        self.pos = pos
+        
+        if sensors is None:
+            sensors = []
+        self.sensors = sensors
+        
         w.create_rectangle(self.pos[0],self.pos[1], self.pos[2], self.pos[3])
 
     def add_sensor(self, sensor):
@@ -18,18 +19,19 @@ class Room(object):
 
     def room_data(self):
         output = 'Room: {} \n'.format(self.name)
-        for sensor in self.sensors:
-            output += sensor.sensor_data() + '\n'
+        output += '\n'.join(sensor.sensor_data() for sensor in self.sensors)
+            
         return output
 
 class Sensor(object):
     def __init__(self, name, status, pos=None):
         self.name = name
         self.status = status
-        if pos == None:
-            self.pos = []
-        else:
-            self.pos = pos
+        
+        if pos is None:
+            pos = []
+        self.pos = pos
+        
         self.img = w.create_rectangle(self.pos[0], self.pos[1], self.pos[2], self.pos[3], fill='red')
 
     def flip_status(self):
