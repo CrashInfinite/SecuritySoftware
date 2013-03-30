@@ -61,6 +61,8 @@ b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
 b.pack()
 c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
 c.pack()
+c = Button(root, text='tripwire', command=lambda : trip.flip_status())
+c.pack()
 l = Label(root, justify=LEFT)
 l.pack()
 
@@ -72,9 +74,11 @@ building.append(office)
 
 window = Sensor('win0', 'OPEN', [170,295,200,305])
 door = Sensor('door0', 'OPEN', [295,150,305,180])
+trip = Sensor('trip0', 'OPEN', [150,150, 190, 155])
 
 office.add_sensor(window)
 office.add_sensor(door)
+office.add_sensor(trip)
 
 #poll for changes to the status of all sensors
 for room in building:
