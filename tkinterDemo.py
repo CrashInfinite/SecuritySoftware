@@ -33,22 +33,32 @@ class Room(object):
 ##############################################################################
 
 class Sensor(object):
-    def __init__(self, name, status, pos=None):
+    def __init__(self, name, status, pos=None, lbl=None):
         self.name = name
         self.status = status
+        self.lbl = None
         
         if pos is None:
             pos = []
         self.pos = pos
         
-    def draw_sensor(self,):
+    def draw_sensor(self):
         i = w.create_oval(
             self.pos[0]-3,self.pos[1]-3,self.pos[0]+3,self.pos[1]+3)
 
+        w.delete(self.lbl)
+
+        self.lbl = w.create_text(
+            self.pos[0]+25, self.pos[1]+10, fill='white')
+
         if self.status == 'OPEN':
             w.itemconfig(i, fill='red')
+            w.itemconfig(self.lbl, text=self.sensor_data())
+
         else:
             w.itemconfig(i, fill='green')
+            stat = 'CLOSED'
+            w.itemconfig(self.lbl, text=self.sensor_data())
 
     def flip_status(self): #eventually controlled by hardware
         if self.status == 'OPEN':
@@ -56,7 +66,6 @@ class Sensor(object):
         else:
             self.status = 'OPEN'
         l.config(text=chapel.return_data()) 
-        #only refers to one room, need to make universal
 
     def check_status(self):
         root.after(200, lambda : self.check_status())
