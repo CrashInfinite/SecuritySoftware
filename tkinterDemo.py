@@ -72,6 +72,24 @@ class Sensor(object):
 
 ##############################################################################
 
+class System(object):
+    def __init__(self, name, rooms=None):
+        self.name = name
+
+        if rooms == None:
+            rooms = []
+        self.rooms = rooms
+
+    def insert_room(self, name):
+        name.draw_room()
+        self.rooms.append(name)
+
+    def insert_sensor(self, room, sensor):
+        sensor.draw_sensor()
+        room.add_sensor(sensor)
+
+##############################################################################
+
 #creating GUI elements
 root = Tk()
 
@@ -92,23 +110,6 @@ l.pack(side=BOTTOM)
 ##############################################################################
 
 #creating the actual layout and sensors
-
-class System(object):
-    def __init__(self, name, rooms=None):
-        self.name = name
-
-        if rooms == None:
-            rooms = []
-        self.rooms = rooms
-
-    def insert_room(self, name):
-        name.draw_room()
-        self.rooms.append(name)
-
-    def insert_sensor(self, room, sensor):
-        sensor.draw_sensor()
-        room.add_sensor(sensor)
-
 chapel = System('chapel')
 
 corners = [(100,100),(300,100),(350,130),(350,230),
