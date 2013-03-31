@@ -1,4 +1,12 @@
+##############################################################################
+# tkinterDemo.py - program to test functionality for 
+# security software
+# Author: Shaun Preston (CrashInfinite)
+##############################################################################
+
 from Tkinter import *
+
+##############################################################################
 
 class Room(object):
     def __init__(self, name, corners=None, sensors=None):
@@ -21,9 +29,9 @@ class Room(object):
 
     def room_data(self):
         output = 'Room: {} \n'.format(self.name)
-        output += '\n'.join(sensor.sensor_data() for sensor in self.sensors)
-            
-        return output
+        return output += '\n'.join(sensor.room_data() for sensor in self.sensors)
+
+##############################################################################
 
 class Sensor(object):
     def __init__(self, name, status, pos=None):
@@ -35,7 +43,8 @@ class Sensor(object):
         self.pos = pos
         
     def draw_sensor(self,):
-        i = w.create_rectangle(self.pos[0],self.pos[1],self.pos[0]+25,self.pos[1]+3)
+        i = w.create_rectangle(
+            self.pos[0],self.pos[1],self.pos[0]+25,self.pos[1]+3)
 
         if self.status == 'OPEN':
             w.itemconfig(i, fill='red')
@@ -47,7 +56,8 @@ class Sensor(object):
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
-        l.config(text=self.sensor_data()) #only refers to one room, need to make universal
+        l.config(text=self.sensor_data()) 
+        #only refers to one room, need to make universal
 
     def check_status(self):
         root.after(200, lambda : self.check_status())
@@ -59,6 +69,7 @@ class Sensor(object):
     def sensor_data(self):
         return 'Sensor {} is currently {}'.format(self.name, self.status)
 
+##############################################################################
 
 #creating GUI elements
 root = Tk()
@@ -67,7 +78,8 @@ w = Canvas(root, width=500, height=500)
 w.pack()
 
 b = Button(root, text='Unlock Door', command=lambda : sensor1.flip_status())
-b.pack(side=RIGHT)
+b.pack()
+
 l = Label(root, justify=LEFT)
 l.pack()
 
