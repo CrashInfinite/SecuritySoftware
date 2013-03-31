@@ -29,7 +29,8 @@ class Room(object):
 
     def room_data(self):
         output = 'Room: {} \n'.format(self.name)
-        return output += '\n'.join(sensor.room_data() for sensor in self.sensors)
+        output += '\n'.join(sensor.sensor_data() for sensor in self.sensors)
+        return output
 
 ##############################################################################
 
@@ -44,19 +45,19 @@ class Sensor(object):
         
     def draw_sensor(self,):
         i = w.create_rectangle(
-            self.pos[0],self.pos[1],self.pos[0]+25,self.pos[1]+3)
+            self.pos[0],self.pos[1]-2,self.pos[0]+25,self.pos[1]+2)
 
         if self.status == 'OPEN':
             w.itemconfig(i, fill='red')
         else:
             w.itemconfig(i, fill='green')
 
-    def flip_status(self):
+    def flip_status(self): #eventually controlled by hardware
         if self.status == 'OPEN':
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
-        l.config(text=self.sensor_data()) 
+        l.config(text=office.room_data()) 
         #only refers to one room, need to make universal
 
     def check_status(self):
@@ -77,27 +78,52 @@ root = Tk()
 w = Canvas(root, width=500, height=500)
 w.pack()
 
-b = Button(root, text='Unlock Door', command=lambda : sensor1.flip_status())
-b.pack()
+f = Frame(root)
+f.pack(side=BOTTOM)
 
-l = Label(root, justify=LEFT)
-l.pack()
+b = Button(f, text='Unlock Door', command=lambda : sensor1.flip_status())
+b.pack(side=LEFT)
+c = Button(f, text='Unlock Window', command=lambda : sensor2.flip_status())
+c.pack(side=LEFT)
+
+l = Label(root, text='awaiting input', justify=LEFT)
+l.pack(side=BOTTOM)
+
+##############################################################################
 
 #creating the actual layout and sensors
-building1 = []
 
-corners = [(100,100),(300,100),(350,130),(350,230),(300,250),(100,250),(100,100)]
-sensor_pos = [200,100]
+class System(object):
+    def __init__(self, name, rooms=None):
+        self.name = name
 
-room1 = Room('room', corners)
-room1.draw_room()
-building1.append(room1)
-sensor1 = Sensor('win0','CLOSED', sensor_pos)
-sensor1.draw_sensor()
-room1.add_sensor(sensor1)
+        if rooms == None:
+            rooms = []
+        self.rooms = rooms
+
+    def insert_room(self, name):
+        name.draw_room()
+        self.rooms.append(name)
+
+    def insert_sensor(self, room, sensor):
+        sensor.draw_sensor()
+        room.add_sensor(sensor)
+
+chapel = System('chapel')
+
+corners = [(100,100),(300,100),(350,130),(350,230),
+            (300,250),(100,250),(100,100)]
+
+office = Room('office', corners)
+sensor1 = Sensor('win0', 'OPEN', [250,250])
+sensor2 = Sensor('door0', 'CLOSED', [150,100])
+
+chapel.insert_room(office)
+chapel.insert_sensor(office, sensor1)
+chapel.insert_sensor(office, sensor2)
 
 #poll for changes to the status of all sensors
-for room in building1:
+for room in chapel.rooms:
     for item in room.sensors:
         root.after(200, item.check_status())
 
