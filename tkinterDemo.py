@@ -1,18 +1,20 @@
 from Tkinter import *
 
 class Room(object):
-    def __init__(self, name, pos=None, sensors=None):
+    def __init__(self, name, corners=None, sensors=None):
         self.name = name
         
-        if pos is None:
-            pos = []
-        self.pos = pos
+        if corners is None:
+            corners = []
+        self.corners = corners
         
         if sensors is None:
             sensors = []
         self.sensors = sensors
         
-        w.create_rectangle(self.pos[0],self.pos[1], self.pos[2], self.pos[3])
+    def draw_room(self):
+        for x in range(len(self.corners)-1):
+            w.create_line(self.corners[x], self.corners[x+1])
 
     def add_sensor(self, sensor):
         self.sensors.append(sensor)
@@ -32,24 +34,31 @@ class Sensor(object):
             pos = []
         self.pos = pos
         
-        self.img = w.create_rectangle(self.pos[0], self.pos[1], self.pos[2], self.pos[3], fill='red')
+    def draw_sensor(self,):
+        i = w.create_rectangle(self.pos[0],self.pos[1],self.pos[0]+25,self.pos[1]+3)
+
+        if self.status == 'OPEN':
+            w.itemconfig(i, fill='red')
+        else:
+            w.itemconfig(i, fill='green')
 
     def flip_status(self):
         if self.status == 'OPEN':
             self.status = 'CLOSED'
         else:
             self.status = 'OPEN'
-        l.config(text=office.room_data())
+        l.config(text=self.sensor_data()) #only refers to one room, need to make universal
 
     def check_status(self):
         root.after(200, lambda : self.check_status())
         if self.status == 'OPEN':
-            w.itemconfig(self.img, fill='red') 
+            self.draw_sensor()
         else:
-            w.itemconfig(self.img, fill='green')
+            self.draw_sensor()
 
     def sensor_data(self):
         return 'Sensor {} is currently {}'.format(self.name, self.status)
+
 
 #creating GUI elements
 root = Tk()
@@ -57,31 +66,26 @@ root = Tk()
 w = Canvas(root, width=500, height=500)
 w.pack()
 
-b = Button(root, text='Unlock Door', command=lambda : door.flip_status())
-b.pack()
-c = Button(root, text='Unlock Window', command=lambda : window.flip_status())
-c.pack()
-c = Button(root, text='tripwire', command=lambda : trip.flip_status())
-c.pack()
+b = Button(root, text='Unlock Door', command=lambda : sensor1.flip_status())
+b.pack(side=RIGHT)
 l = Label(root, justify=LEFT)
 l.pack()
 
 #creating the actual layout and sensors
-building = []
+building1 = []
 
-office = Room('Office', [50,50,300,300], [])
-building.append(office)
+corners = [(100,100),(300,100),(350,130),(350,230),(300,250),(100,250),(100,100)]
+sensor_pos = [200,100]
 
-window = Sensor('win0', 'OPEN', [170,295,200,305])
-door = Sensor('door0', 'OPEN', [295,150,305,180])
-trip = Sensor('trip0', 'OPEN', [150,150, 190, 155])
-
-office.add_sensor(window)
-office.add_sensor(door)
-office.add_sensor(trip)
+room1 = Room('room', corners)
+room1.draw_room()
+building1.append(room1)
+sensor1 = Sensor('win0','CLOSED', sensor_pos)
+sensor1.draw_sensor()
+room1.add_sensor(sensor1)
 
 #poll for changes to the status of all sensors
-for room in building:
+for room in building1:
     for item in room.sensors:
         root.after(200, item.check_status())
 
